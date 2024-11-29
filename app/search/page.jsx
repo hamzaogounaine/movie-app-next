@@ -30,7 +30,8 @@ export default function SearchPage() {
             <SearchBar onSearch={handleSearch} />
             {isLoading && <p className="text-center mt-4 flex justify-center items-center"><Loader /></p>}
             {movies.length === 0 && !isLoading && <p className="text-center mt-4">No movies found</p>}
-            {movies && <p className="text-sm text-end mt-4">Found {movies.length} movies</p>}
+            {}
+            {movies.length > 0 && <p className="text-sm text-end mt-4">Found {movies.length} movies</p>}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
                 {movies.map((movie) => (
                     <MovieCard key={movie.id} movie={movie} />

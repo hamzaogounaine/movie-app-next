@@ -28,13 +28,29 @@ const MoviesProvider = ({ children }) => {
         return response.data.logos;
     }
 
+    const fetchUpcomingMovies = async () => {
+        const response = await axios.get(`${base_url}/movie/upcoming?api_key=${api_key}&language=en-US&page=1`);
+        return response.data.results;
+    }
 
+    const fetchNowPlayingMovies = async () => {
+      const response = await axios.get(`${base_url}/movie/now_playing?api_key=${api_key}&language=en-US&page=1`);
+      return response.data.results;
+    }
+
+    const fetchTrendingShows = async () => {
+      const response = await axios.get(`${base_url}/trending/tv/day?api_key=${api_key}`);
+      return response.data.results;
+    }
   return (
     <moviesContext.Provider value={{
       fetchTopRatedMovies,
       fetchTrendingMovies,
       fetchByQuery,
-      getMoviesLogo
+      getMoviesLogo,
+      fetchUpcomingMovies,
+      fetchNowPlayingMovies,
+      fetchTrendingShows
     }}>
       {children}
     </moviesContext.Provider>

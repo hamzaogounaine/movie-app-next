@@ -5,18 +5,18 @@ import { Badge } from '@/components/ui/badge'
 import { Star, Calendar } from 'lucide-react'
 import PropTypes from 'prop-types'
 
-export default function MovieCard({ movie }) {
+export default function ShowCard({ tv }) {
   const base_url = 'https://image.tmdb.org/t/p/w500'
-  const imageUrl = `${base_url}${movie.poster_path || movie.backdrop_path}`
-  const year = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'
+  const imageUrl = `${base_url}${tv.poster_path || tv.backdrop_path}`
+  const year = tv.first_air_date ? new Date(tv.first_air_date).getFullYear() : 'N/A'
 
   return (
     <Card className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl group border-none">
-      <Link href={`/movie/${movie.id}`} className="block">
+      <Link href={`/tv/${tv.id}`} className="block">
         <div className="relative aspect-[2/3] overflow-hidden">
           <img
             src={imageUrl}
-            alt={`${movie.title} poster`}
+            alt={`${tv.name} poster`}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105 group-hover:brightness-75"
@@ -31,7 +31,7 @@ export default function MovieCard({ movie }) {
         
         <CardHeader className="p-4 pb-2">
           <CardTitle className="text-lg font-bold line-clamp-1 transition-colors group-hover:text-primary">
-            {movie.title}
+            {tv.name}
           </CardTitle>
         </CardHeader>
         
@@ -46,7 +46,7 @@ export default function MovieCard({ movie }) {
             className="bg-secondary/10 hover:bg-secondary/20 flex items-center space-x-1"
           >
             <Star className="h-3 w-3 text-yellow-500" />
-            <span className="font-semibold">{movie.vote_average.toFixed(1)}</span>
+            <span className="font-semibold">{tv.vote_average.toFixed(1)}</span>
           </Badge>
         </CardContent>
       </Link>
@@ -54,8 +54,8 @@ export default function MovieCard({ movie }) {
   )
 }
 
-MovieCard.propTypes = {
-  movie: PropTypes.shape({
+ShowCard.propTypes = {
+  tv: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     poster_path: PropTypes.string,

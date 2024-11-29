@@ -11,9 +11,10 @@ import { useMovies } from "@/context/moviesContext";
 import { Button } from "../ui/button";
 import { Info, Play } from "lucide-react";
 import { MdPlayArrow } from "react-icons/md";
+import { Skeleton } from "@mui/material";
 
 const EmblaCarousel = (props) => {
-  const { slides, options } = props;
+  const { slides, options, loading } = props;
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [Fade()]);
   const { getMoviesLogo } = useMovies();
   const [logos, setLogos] = useState([]);
@@ -44,9 +45,10 @@ const EmblaCarousel = (props) => {
   } = usePrevNextButtons(emblaApi);
 
   return (
-    <div className="embla">
+    <div className="embla ">
       <div className="embla__viewport" ref={emblaRef}>
-        <div className="embla__container">
+        {loading &&  <Skeleton variant="rounded" className="dark:bg-gray-300 w-screen" height="50%"/>}
+        <div className="embla__container bg-black rounded-3xl">
           {slides.map((movie, index) => (
             <div key={movie.id} className="embla__slide relative">
               {movie !== undefined && (
@@ -56,19 +58,19 @@ const EmblaCarousel = (props) => {
                     src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
                     alt="A cool cat."
                   />
-                  <div className="absolute top-1/2 left-10 transform -translate-y-1/2 w-50">
+                  <div className="absolute top-1/2 left-10 transform -translate-y-1/2 w-1/4">
                     {logos[index] && (
                       <>
                         <img
                           src={`https://image.tmdb.org/t/p/original${logos[index].file_path}`}
-                          className=""
+                          className="z-50"
                           width={400}
                           alt=""
                         />
                         <div className="flex gap-3">
 
-                        <Button className="mt-4 flex gap-2" size='lg'><MdPlayArrow className="w-8 h-8" />Watch Now</Button>
-                        <Button className="mt-4 flex gap-2" size='lg' variant='secondary'><Info className="w-8 h-8" />Show more</Button>
+                        <Button className="mt-4 flex gap-2" ><MdPlayArrow className="w-8 h-8" />Watch Now</Button>
+                        <Button className="mt-4 flex gap-2"  variant='secondary'><Info className="w-8 h-8" />Show more</Button>
                         </div>
                       </>
                     )}
@@ -81,7 +83,7 @@ const EmblaCarousel = (props) => {
       </div>
 
       <div className="embla__controls">
-        <div className="embla__buttons">
+        <div className="embla__buttons max-sm:hidden">
           <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
           <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
         </div>
