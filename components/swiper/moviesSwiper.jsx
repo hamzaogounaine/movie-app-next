@@ -1,39 +1,81 @@
-'use client';
-import React from 'react';
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
+import * as React from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import { Skeleton } from "@mui/material"
+import MovieCard from '@/app/search/MovieCard'
 
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/pagination';
-import "../../styles/globals.css";
-// import required modules
-import { FreeMode, Pagination } from 'swiper/modules';
+export default function MovieCarousel({ movies, loading }) {
+  const [api, setApi] = React.useState(null)
+  const [current, setCurrent] = React.useState(0)
+  const [count, setCount] = React.useState(0)
 
-export default function MovieSwiper() {
+  React.useEffect(() => {
+    if (!api) {
+      return
+    }
+
+    setCount(api.scrollSnapList().length)
+    setCurrent(api.selectedScrollSnap() + 1)
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1)
+    })
+  }, [api])
+
+  const getSlidesPerView = () => {
+    if (typeof window === 'undefined') return 2;
+    if (window.innerWidth >= 1024) return 5;
+    if (window.innerWidth >= 768) return 3;
+    return 2;
+  };
+
+  const renderSkeletons = () => {
+    return Array(getSlidesPerView()).fill(0).map((_, index) => (
+      <CarouselItem key={index} className="w-fit">
+        <div className="p-1">
+          <Skeleton
+            variant="rectangular"
+            height={345}
+            sx={{
+              bgcolor: 'grey.800',
+              borderRadius: 2
+            }}
+          />
+        </div>
+      </CarouselItem>
+    ));
+  };
+
   return (
-    <div>
-      <Swiper
-        slidesPerView={3}
-        spaceBetween={30}
-        freeMode={true}
-        pagination={{
-          clickable: true,
-        }}
-        modules={[FreeMode, Pagination]}
-        className="mySwiper"
+    <div className="w-full">
+      <Carousel
+        setApi={setApi}
+        className="w-fit"
       >
-        <SwiperSlide>Slide 1</SwiperSlide>
-        <SwiperSlide>Slide 2</SwiperSlide>
-        <SwiperSlide>Slide 3</SwiperSlide>
-        <SwiperSlide>Slide 4</SwiperSlide>
-        <SwiperSlide>Slide 5</SwiperSlide>
-        <SwiperSlide>Slide 6</SwiperSlide>
-        <SwiperSlide>Slide 7</SwiperSlide>
-        <SwiperSlide>Slide 8</SwiperSlide>
-        <SwiperSlide>Slide 9</SwiperSlide>
-      </Swiper>
+        <CarouselContent>
+          {loading
+            ? renderSkeletons()
+            : movies.map((movie) => (
+                <CarouselItem 
+                  key={movie.id} 
+                  className="w-fit"
+                >
+                  <div className="p-1 w-fit">
+                    <MovieCard movie={movie} className='w-fit'/>
+                  </div>
+                </CarouselItem>
+              ))
+          }
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
     </div>
-  );
+  )
 }
