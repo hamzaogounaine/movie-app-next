@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -13,7 +13,7 @@ import { FreeMode, Pagination } from 'swiper/modules';
 
 export default function MovieSwiper() {
   return (
-    <>
+    <div>
       <Swiper
         slidesPerView={3}
         spaceBetween={30}
@@ -34,6 +34,6 @@ export default function MovieSwiper() {
         <SwiperSlide>Slide 8</SwiperSlide>
         <SwiperSlide>Slide 9</SwiperSlide>
       </Swiper>
-    </>
+    </div>
   );
 }
