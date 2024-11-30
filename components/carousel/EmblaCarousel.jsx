@@ -45,18 +45,25 @@ const EmblaCarousel = (props) => {
   } = usePrevNextButtons(emblaApi);
 
   return (
-    <div className="embla ">
+    <div className="embla">
       <div className="embla__viewport" ref={emblaRef}>
-        {loading &&  <Skeleton variant="rounded" className="dark:bg-gray-300 w-screen" height="50%"/>}
+        {loading && (
+          <Skeleton
+            variant="rounded"
+            className="dark:bg-gray-300 "
+            height="50%"
+          />
+        )}
         <div className="embla__container bg-black rounded-3xl">
           {slides.map((movie, index) => (
-            <div key={movie.id} className="embla__slide relative">
+            <div key={movie.id} className="embla__slide relative w-fit">
               {movie !== undefined && (
                 <>
                   <img
-                    className="embla__slide__img opacity-50"
+                    className="embla__slide__img opacity-50 h-full object-cover"
                     src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-                    alt="A cool cat."
+                    alt={movie.title}
+                    width='100px'
                   />
                   <div className="absolute top-1/2 left-10 transform -translate-y-1/2 w-1/4">
                     {logos[index] && (
@@ -68,9 +75,17 @@ const EmblaCarousel = (props) => {
                           alt=""
                         />
                         <div className="flex gap-3">
-
-                        <Button className="mt-4 flex gap-2" ><MdPlayArrow className="w-8 h-8" />Watch Now</Button>
-                        <Button className="mt-4 flex gap-2"  variant='secondary'><Info className="w-8 h-8" />Show more</Button>
+                          <Button className="mt-4 flex gap-2">
+                            <MdPlayArrow className="w-8 h-8" />
+                            Watch Now
+                          </Button>
+                          <Button
+                            className="mt-4 flex gap-2"
+                            variant="secondary"
+                          >
+                            <Info className="w-8 h-8" />
+                            Show more
+                          </Button>
                         </div>
                       </>
                     )}

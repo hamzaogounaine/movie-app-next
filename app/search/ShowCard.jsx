@@ -13,12 +13,11 @@ export default function ShowCard({ tv }) {
   return (
     <Card className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl group border-none">
       <Link href={`/tv/${tv.id}`} className="block">
-        <div className="relative aspect-[2/3] overflow-hidden">
+        <div className="relative overflow-hidden">
           <img
             src={imageUrl}
             alt={`${tv.name} poster`}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105 group-hover:brightness-75"
             priority
           />

@@ -1,72 +1,81 @@
-'use client';
-import React, { useRef, useState } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import * as React from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import { Skeleton } from "@mui/material"
+import MovieCard from '@/app/search/MovieCard'
 
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/pagination';
-import "../../styles/globals.css";
+export default function MovieCarousel({ movies, loading }) {
+  const [api, setApi] = React.useState(null)
+  const [current, setCurrent] = React.useState(0)
+  const [count, setCount] = React.useState(0)
 
-// Import required modules
-import { FreeMode, Pagination } from 'swiper/modules';
-import MovieCard from '@/app/search/MovieCard';
-import { Skeleton } from '@mui/material';
+  React.useEffect(() => {
+    if (!api) {
+      return
+    }
 
-export default function MovieSwiper({movies, loading}) {
-   const getSlidesPerView = () => {
-     if (window.innerWidth >= 1024) return 5;
-     if (window.innerWidth >= 768) return 3;
-     return 2;
-   };
+    setCount(api.scrollSnapList().length)
+    setCurrent(api.selectedScrollSnap() + 1)
 
-   const [slidesPerView, setSlidesPerView] = useState(getSlidesPerView());
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1)
+    })
+  }, [api])
 
-   React.useEffect(() => {
-     const handleResize = () => {
-       setSlidesPerView(getSlidesPerView());
-     };
+  const getSlidesPerView = () => {
+    if (typeof window === 'undefined') return 2;
+    if (window.innerWidth >= 1024) return 5;
+    if (window.innerWidth >= 768) return 3;
+    return 2;
+  };
 
-     window.addEventListener('resize', handleResize);
-     return () => {
-       window.removeEventListener('resize', handleResize);
-     };
-   }, []);
+  const renderSkeletons = () => {
+    return Array(getSlidesPerView()).fill(0).map((_, index) => (
+      <CarouselItem key={index} className="w-fit">
+        <div className="p-1">
+          <Skeleton
+            variant="rectangular"
+            height={345}
+            sx={{
+              bgcolor: 'grey.800',
+              borderRadius: 2
+            }}
+          />
+        </div>
+      </CarouselItem>
+    ));
+  };
 
-   // Skeleton rendering function
-   const renderSkeletons = () => {
-     return Array(slidesPerView).fill(0).map((_, index) => (
-       <SwiperSlide key={index} className='w-1/5'>
-         <Skeleton 
-           variant="rectangular" 
-           width={230} 
-           height={345} 
-           sx={{ 
-             bgcolor: 'grey.800', 
-             borderRadius: 2 
-           }} 
-         />
-       </SwiperSlide>
-     ));
-   };
-
-   return (
-     <div>
-       <Swiper
-        slidesPerView={slidesPerView}
-        spaceBetween={5}
-        modules={[FreeMode, Pagination]}
-        className="max-w-screen-lg"
+  return (
+    <div className="w-full">
+      <Carousel
+        setApi={setApi}
+        className="w-fit"
       >
-         {loading 
-           ? renderSkeletons()
-           : movies.map((movie) => (
-               <SwiperSlide key={movie.id} className='w-1/5'>
-                 <MovieCard movie={movie} />
-               </SwiperSlide>
-             ))
-         }
-       </Swiper>
-     </div>
-   );
+        <CarouselContent>
+          {loading
+            ? renderSkeletons()
+            : movies.map((movie) => (
+                <CarouselItem 
+                  key={movie.id} 
+                  className="w-fit"
+                >
+                  <div className="p-1 w-fit">
+                    <MovieCard movie={movie} className='w-fit'/>
+                  </div>
+                </CarouselItem>
+              ))
+          }
+        </CarouselContent>
+        <CarouselPrevious />
+        <CarouselNext />
+      </Carousel>
+    </div>
+  )
 }

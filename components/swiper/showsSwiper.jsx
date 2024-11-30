@@ -10,14 +10,13 @@ import 'swiper/css/pagination';
 import "../../styles/globals.css";
 // import required modules
 import { FreeMode, Pagination } from 'swiper/modules';
-import MovieCard from '@/app/search/MovieCard';
 import ShowCard from '@/app/search/ShowCard';
 import { Skeleton } from '@mui/material';
 
-export default function ShowsSwiper({shows, loading}) {
+export default function ShowsSwiper({ shows, loading }) {
   const getSlidesPerView = () => {
     if (window.innerWidth >= 1024) return 5;
-    if (window.innerWidth >= 768) return 3;
+    if (window.innerWidth >= 768) return 2;
     return 2;
   };
 
@@ -37,10 +36,10 @@ export default function ShowsSwiper({shows, loading}) {
   // Skeleton rendering function
   const renderSkeletons = () => {
     return Array(slidesPerView).fill(0).map((_, index) => (
-      <SwiperSlide key={index} className='w-1/5'>
+      <SwiperSlide key={index} className='w-full'>
         <Skeleton 
           variant="rectangular" 
-          width={230} 
+          width="100%" 
           height={345} 
           sx={{ 
             bgcolor: 'grey.800', 
@@ -52,17 +51,18 @@ export default function ShowsSwiper({shows, loading}) {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <Swiper
         slidesPerView={slidesPerView}
-        spaceBetween={5}
+        spaceBetween={10}
+        freeMode
         modules={[FreeMode, Pagination]}
-        className="max-w-screen-lg"
+        className="w-full"
       >
         {loading 
           ? renderSkeletons()
           : shows.map((tv) => (
-              <SwiperSlide key={tv.id} className='w-1/5'>
+              <SwiperSlide key={tv.id} className='w-full'>
                 <ShowCard tv={tv} />
               </SwiperSlide>
             ))

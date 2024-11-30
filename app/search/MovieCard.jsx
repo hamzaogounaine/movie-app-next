@@ -4,23 +4,30 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Star, Calendar } from 'lucide-react'
 import PropTypes from 'prop-types'
+import { useState } from 'react'
 
 export default function MovieCard({ movie }) {
+  const [imageWidth, setImageWidth] = useState(null)
   const base_url = 'https://image.tmdb.org/t/p/w500'
   const imageUrl = `${base_url}${movie.poster_path || movie.backdrop_path}`
   const year = movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'
 
+  const handleImageLoad = (e) => {
+    setImageWidth(e.target.naturalWidth)
+  }
+
   return (
-    <Card className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl group border-none">
+    <Card 
+      className="relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-2xl group border-none h-full"
+      style={{ width: imageWidth ? `${imageWidth}px` : 'auto' }}
+    >
       <Link href={`/movie/${movie.id}`} className="block">
-        <div className="relative aspect-[2/3] overflow-hidden">
+        <div className="relative overflow-hidden">
           <img
             src={imageUrl}
             alt={`${movie.title} poster`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105 group-hover:brightness-75"
-            priority
+            className="transition-transform duration-500 group-hover:scale-105 group-hover:brightness-75 h-auto"
+            onLoad={handleImageLoad}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-end p-4">
             <div className="text-white opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
